@@ -1,0 +1,35 @@
+version: 2
+models:
+  - name: fct_payments
+    data_tests:
+      # whole days against the '*' rows
+      - dataranger.matches_control_totals:
+          arguments:
+            totals: ref('source_totals')
+            date_column: paid_on
+            amount_column: amount
+            totals_segment_column: channel
+            amount_tolerance: 0.000001
+      # each day and channel
+      - dataranger.matches_control_totals:
+          arguments:
+            totals: ref('source_totals')
+            date_column: paid_on
+            amount_column: amount
+            segment_column: channel
+            amount_tolerance: 0.000001
+      # straight against the raw table, no totals model needed
+      - dataranger.reconciles_with_source:
+          arguments:
+            source_relation: ref('raw_payments')
+            source_date_column: txn_date
+            source_amount_column: amt
+            source_where: "status <> 'test'"
+            date_column: paid_on
+            amount_column: amount
+            segment_column: channel
+            amount_tolerance: 0.000001
+  - name: source_totals
+    columns:
+      - name: n
+        data_tests: [not_null]

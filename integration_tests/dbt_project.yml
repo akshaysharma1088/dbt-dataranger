@@ -1,0 +1,10 @@
+name: dataranger_integration_tests
+version: "1.0"
+config-version: 2
+profile: integration_tests
+model-paths: ["models"]
+seed-paths: ["seeds"]
+test-paths: ["tests"]
+models:
+  dataranger_integration_tests:
+    +materialized: table
