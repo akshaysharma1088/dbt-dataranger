@@ -19,7 +19,7 @@ packages:
 ```
 
 Then run `dbt deps`. Works with dbt 1.10 and later. It uses only standard SQL and dbt's
-cross-database macros, and is tested on DuckDB in CI.
+cross-database macros. It is tested on DuckDB in CI on every change, and on Snowflake.
 
 ## 1. Reconcile a model with its raw table
 
@@ -125,6 +125,11 @@ dbt deps && dbt build
 
 The integration project builds a clean model, a model with a join fan-out and a model with a unit
 change, and checks that the clean one passes and the other two are caught.
+
+On Windows, `dbt deps` copies the package folder instead of linking it, and the copy includes
+`integration_tests` itself, so it nests until the path is too long. Copy `dbt_project.yml` and
+`macros/` to a folder outside the repository and point `integration_tests/packages.yml` at that
+folder instead of `../`. This only affects running the tests; installing from the Hub is unaffected.
 
 ## License
 
